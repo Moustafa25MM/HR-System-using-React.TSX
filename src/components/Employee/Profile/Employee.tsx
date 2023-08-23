@@ -41,6 +41,7 @@ function Employee() {
             <tr>
               <th>Name</th>
               <th>Email</th>
+              <th>Attendance</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -50,6 +51,14 @@ function Employee() {
                 <tr key={index}>
                   <td>{employee.name}</td>
                   <td>{employee.email}</td>
+                  <td>
+                    <Link
+                      to={`/add/attendance/` + employee._id}
+                      className='btn btn-primary btn-sm me-2'
+                    >
+                      Add
+                    </Link>
+                  </td>
                   <td>
                     <Link
                       to={`/edit/` + employee._id}

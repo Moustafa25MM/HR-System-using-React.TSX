@@ -1,0 +1,59 @@
+.attendance-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.attendance-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 600px;
+}
+
+.attendance-calendar {
+  margin-right: 20px;
+}
+
+.attendance-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.attendance-select {
+  margin-bottom: 10px;
+  padding: 10px;
+  font-size: 18px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.attendance-select option[value='late'] {
+  background: #f6c26e;
+}
+
+.attendance-select option[value='present'] {
+  background: #8be37f;
+}
+
+.attendance-select option[value='absent'] {
+  background: #e89292;
+}
+
+.attendance-submit {
+  padding: 10px 20px;
+  font-size: 18px;
+  color: #fff;
+  background: #337ab7;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.attendance-submit:hover {
+  background: #286090;
+}

@@ -10,6 +10,7 @@ import Dashboard from './components/Dashboard/dashboard';
 import Employee from './components/Employee/Profile/Employee';
 import AddEmployee from './components/Employee/AddEmployee/AddEmployee';
 import EditEmployee from './components/Employee/EditEmployee/EditEmployee';
+import AddAttendance from './components/Attendance/AddAttendance/AddAttendance';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route path='employee' element={<Employee />} />
             <Route path='create' element={<AddEmployee />} />
             <Route path='edit/:id' element={<EditEmployee />} />
+            <Route path='add/attendance/:id' element={<AddAttendance />} />
           </Route>
           <Route path='/login' element={<Login />} />
         </Routes>
