@@ -61,7 +61,10 @@ function Attendance() {
         <h3 className='m-0'>{employeeData?.email}</h3>
         <h3 className='m-0 mt-2'>{employeeData?.name}</h3>
       </div>
-      <Link to='/create' className='btn btn-success'>
+      <Link
+        to={`/add/attendance/` + employeeData?._id}
+        className='btn btn-success'
+      >
         Add Attendance
       </Link>
       <div className='mt-3'>

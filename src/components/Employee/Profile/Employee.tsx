@@ -54,7 +54,7 @@ function Employee() {
                   <td>
                     <Link
                       to={`/attendance/employee/` + employee._id}
-                      className='btn btn-primary btn-sm me-2'
+                      className='btn btn-info btn-sm me-2'
                     >
                       Attendance
                     </Link>

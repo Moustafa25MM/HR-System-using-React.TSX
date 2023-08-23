@@ -45,14 +45,14 @@ function AddAttendance() {
 
         if (response.status === 201) {
           toast.success('Attendance created successfully');
-          navigate('/employee');
+          navigate(`/attendance/employee/` + employeeId);
         }
       } catch (error) {
         setErrorMessage('Error: Missing data');
         toast.error('Failed to create attendance');
       }
     } else {
-      setErrorMessage('Please select a status');
+      toast.error('please select a status');
     }
   };
 
@@ -64,6 +64,8 @@ function AddAttendance() {
           className='attendance-calendar'
           value={initialDate}
           onChange={(date) => date instanceof Date && setInitialDate(date)}
+          maxDate={new Date()}
+          minDate={new Date(2023, 0, 1)}
         />
         <form onSubmit={handleSubmit} className='attendance-form'>
           <select
