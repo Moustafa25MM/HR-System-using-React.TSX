@@ -70,22 +70,20 @@ const Home = () => {
   return (
     <div>
       <div className='p-3 d-flex justify-content-around mt-3'>
-        <div className='px-3 pt-2 pb-3 border shadow-sm w-25'>
-          <div className='text-center pb-1'>
-            <h4>HR</h4>
-          </div>
+        <div className='px-3 pt-2 pb-3 border shadow-sm w-25 text-center'>
+          <h4>HR</h4>
           <hr />
-          <div className=''>
-            <h5>Total: {hrCount}</h5>
+          <div className='d-flex justify-content-between align-items-center'>
+            <h5>Total:</h5>
+            <span className='badge bg-primary'>{hrCount}</span>
           </div>
         </div>
-        <div className='px-3 pt-2 pb-3 border shadow-sm w-25'>
-          <div className='text-center pb-1'>
-            <h4>Employee</h4>
-          </div>
+        <div className='px-3 pt-2 pb-3 border shadow-sm w-25 text-center'>
+          <h4>Employee</h4>
           <hr />
-          <div className=''>
-            <h5>Total: {employeeCount}</h5>
+          <div className='d-flex justify-content-between align-items-center'>
+            <h5>Total:</h5>
+            <span className='badge bg-primary'>{employeeCount}</span>
           </div>
         </div>
       </div>
@@ -93,7 +91,7 @@ const Home = () => {
       {/* List of hr  */}
       <div className='mt-4 px-5 pt-3'>
         <h3>List of Admins</h3>
-        <table className='table'>
+        <table className='table table-striped table-hover'>
           <thead>
             <tr>
               <th>Email</th>
