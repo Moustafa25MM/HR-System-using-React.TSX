@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
@@ -12,20 +13,41 @@ interface NormalEmployee {
 
 function Employee() {
   const [data, setData] = useState<NormalEmployee[]>([]);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
+  const [totalDocs, setTotalDocs] = useState(0);
+
   let token = localStorage.getItem('token');
 
-  useEffect(() => {
+  const loadNormalEmpolyee = () => {
     axios
-      .get(`${process.env.REACT_APP_BASE_API_URL}employees/all?group=normal`, {
-        headers: {
-          Authorization: `${token}`,
-        },
-      })
+      .get(
+        `${process.env.REACT_APP_BASE_API_URL}employees/all?group=normal&pageNumber=${pageNumber}&pageSize=${pageSize}`,
+        {
+          headers: {
+            Authorization: `${token}`,
+          },
+        }
+      )
       .then((res) => {
         setData(res.data.employees);
+        setTotalDocs(res.data.pagination.totalDocs);
       })
       .catch((err) => console.log(err));
-  }, []);
+  };
+  useEffect(() => {
+    loadNormalEmpolyee();
+  }, [pageNumber]);
+
+  const handleNext = () => {
+    setPageNumber(pageNumber + 1);
+  };
+
+  const handlePrev = () => {
+    if (pageNumber > 1) {
+      setPageNumber(pageNumber - 1);
+    }
+  };
 
   return (
     <div className='px-5 py-3'>
@@ -72,6 +94,30 @@ function Employee() {
             })}
           </tbody>
         </table>
+        <div className='pagination-wrapper'>
+          <div className='pagination-buttons'>
+            <button
+              onClick={handlePrev}
+              className='btn btn-primary me-2'
+              disabled={pageNumber === 1}
+            >
+              Previous
+            </button>
+            <button
+              onClick={handleNext}
+              className='btn btn-primary'
+              disabled={totalDocs / pageSize <= pageNumber}
+            >
+              Next
+            </button>
+          </div>
+
+          <div className='page-info'>
+            <h5>
+              Page: {pageNumber} / {Math.ceil(totalDocs / pageSize)}
+            </h5>
+          </div>
+        </div>
       </div>
     </div>
   );

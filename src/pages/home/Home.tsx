@@ -102,14 +102,16 @@ const Home = () => {
               <th>Action</th>
             </tr>
           </thead>
-          {hrEmployees.map((hrEmployee, index) => (
-            <tr key={index}>
-              <td>{hrEmployee.email}</td>
-              <td>{hrEmployee.group}</td>
-              <td>{hrEmployee.name}</td>
-              <td>Action</td>
-            </tr>
-          ))}
+          <tbody>
+            {hrEmployees.map((hrEmployee, index) => (
+              <tr key={index}>
+                <td>{hrEmployee.email}</td>
+                <td>{hrEmployee.group}</td>
+                <td>{hrEmployee.name}</td>
+                <td>Action</td>
+              </tr>
+            ))}
+          </tbody>
         </table>
         <div className='pagination-wrapper'>
           <div className='pagination-buttons'>
