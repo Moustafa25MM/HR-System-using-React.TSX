@@ -1,0 +1,21 @@
+.pagination-wrapper {
+  position: fixed;
+  bottom: 50px;
+  left: 0;
+  right: 0;
+  padding: 30px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.pagination-buttons {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.page-info {
+  text-align: right;
+  width: 50px;
+}
