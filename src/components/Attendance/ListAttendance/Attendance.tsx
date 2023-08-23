@@ -3,6 +3,8 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface AttendanceInterface {
   _id: string;
@@ -52,6 +54,23 @@ function Attendance() {
       .catch((err) => console.log(err));
   }, []);
 
+  async function handleDelete(id: string) {
+    try {
+      await axios.delete(
+        `${process.env.REACT_APP_BASE_API_URL}attendance/delete/${id}`,
+        {
+          headers: {
+            Authorization: `${token}`,
+          },
+        }
+      );
+      setData(data.filter((item) => item._id !== id));
+      toast.success('Attendance deleted successfully!');
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   return (
     <div className='px-5 py-3'>
       <div className='d-flex justify-content-center mt-2'>
@@ -94,6 +113,12 @@ function Attendance() {
                       >
                         Edit
                       </Link>
+                      <button
+                        onClick={() => handleDelete(attendance._id)}
+                        className='btn btn-danger btn-sm'
+                      >
+                        Delete
+                      </button>
                     </td>
                   </tr>
                 );
