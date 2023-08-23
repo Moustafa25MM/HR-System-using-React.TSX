@@ -1,0 +1,17 @@
+.navbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #2c3e50; /* dark navy color */
+  height: 60px; /* navbar height */
+  box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1); /* shadow for a bit of depth */
+}
+
+.navbar-logo {
+  margin: 0;
+  color: #ecf0f1; /* off-white color */
+  font-size: 2em; /* larger font size */
+  text-transform: uppercase; /* uppercase letters */
+  letter-spacing: 2px; /* spacing between letters */
+  font-weight: bold; /* bolder font */
+}
