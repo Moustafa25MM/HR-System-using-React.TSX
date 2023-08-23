@@ -13,6 +13,7 @@ import EditEmployee from './components/Employee/EditEmployee/EditEmployee';
 import AddAttendance from './components/Attendance/AddAttendance/AddAttendance';
 import Attendance from './components/Attendance/ListAttendance/Attendance';
 import EditAttendance from './components/Attendance/EditAttendance/EditAttendance';
+import NotFound from './components/NotFound/NotFound';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
             <Route path='attendance/update/:id' element={<EditAttendance />} />
           </Route>
           <Route path='/login' element={<Login />} />
+          <Route path='*' element={<NotFound />} />
         </Routes>
       </Router>
     </>
