@@ -16,10 +16,12 @@ function Employee() {
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [totalDocs, setTotalDocs] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   let token = localStorage.getItem('token');
 
   const loadNormalEmpolyee = () => {
+    setIsLoading(true);
     axios
       .get(
         `${process.env.REACT_APP_BASE_API_URL}employees/all?group=normal&pageNumber=${pageNumber}&pageSize=${pageSize}`,
@@ -32,8 +34,12 @@ function Employee() {
       .then((res) => {
         setData(res.data.employees);
         setTotalDocs(res.data.pagination.totalDocs);
+        setIsLoading(false);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+      });
   };
   useEffect(() => {
     loadNormalEmpolyee();
@@ -57,68 +63,75 @@ function Employee() {
       <Link to='/create' className='btn btn-success'>
         Add Employee
       </Link>
-      <div className='mt-3'>
-        <table className='table'>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Attendance</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((employee, index) => {
-              return (
-                <tr key={index}>
-                  <td>{employee.name}</td>
-                  <td>{employee.email}</td>
-                  <td>
-                    <Link
-                      to={`/attendance/employee/` + employee._id}
-                      className='btn btn-info btn-sm me-2'
-                    >
-                      Attendance
-                    </Link>
-                  </td>
-                  <td>
-                    <Link
-                      to={`/edit/` + employee._id}
-                      className='btn btn-primary btn-sm me-2'
-                    >
-                      edit
-                    </Link>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-        <div className='pagination-wrapper'>
-          <div className='pagination-buttons'>
-            <button
-              onClick={handlePrev}
-              className='btn btn-primary me-2'
-              disabled={pageNumber === 1}
-            >
-              Previous
-            </button>
-            <button
-              onClick={handleNext}
-              className='btn btn-primary'
-              disabled={totalDocs / pageSize <= pageNumber}
-            >
-              Next
-            </button>
-          </div>
 
-          <div className='page-info'>
-            <h5>
-              Page: {pageNumber} / {Math.ceil(totalDocs / pageSize)}
-            </h5>
+      {isLoading ? (
+        <div className='spinner-container'>
+          <div className='loading-indicator'></div>
+        </div>
+      ) : (
+        <div className='mt-3'>
+          <table className='table'>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Attendance</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((employee, index) => {
+                return (
+                  <tr key={index}>
+                    <td>{employee.name}</td>
+                    <td>{employee.email}</td>
+                    <td>
+                      <Link
+                        to={`/attendance/employee/` + employee._id}
+                        className='btn btn-info btn-sm me-2'
+                      >
+                        Attendance
+                      </Link>
+                    </td>
+                    <td>
+                      <Link
+                        to={`/edit/` + employee._id}
+                        className='btn btn-primary btn-sm me-2'
+                      >
+                        edit
+                      </Link>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+          <div className='pagination-wrapper'>
+            <div className='pagination-buttons'>
+              <button
+                onClick={handlePrev}
+                className='btn btn-primary me-2'
+                disabled={pageNumber === 1}
+              >
+                Previous
+              </button>
+              <button
+                onClick={handleNext}
+                className='btn btn-primary'
+                disabled={totalDocs / pageSize <= pageNumber}
+              >
+                Next
+              </button>
+            </div>
+
+            <div className='page-info'>
+              <h5>
+                Page: {pageNumber} / {Math.ceil(totalDocs / pageSize)}
+              </h5>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

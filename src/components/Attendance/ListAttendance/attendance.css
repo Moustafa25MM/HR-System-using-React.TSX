@@ -1,0 +1,10 @@
+.remove-button {
+  padding: 12px 12px;
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background-color 0.2s ease-in-out;
+}

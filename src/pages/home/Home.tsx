@@ -16,6 +16,7 @@ const Home = () => {
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [totalDocs, setTotalDocs] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const usenavigate = useNavigate();
   let token = localStorage.getItem('token');
@@ -26,6 +27,7 @@ const Home = () => {
   });
 
   const loadHrEmployees = () => {
+    setIsLoading(true);
     axios
       .get(
         `${process.env.REACT_APP_BASE_API_URL}employees/all?group=hr&pageNumber=${pageNumber}&pageSize=${pageSize}`,
@@ -36,10 +38,10 @@ const Home = () => {
         }
       )
       .then((res) => {
-        console.log(res.data.employees);
         setAdminCount(res.data.pagination.totalDocs);
         setTotalDocs(res.data.pagination.totalDocs);
         setHrEmployees(res.data.employees);
+        setIsLoading(false);
       })
       .catch((err) => console.log(err));
   };
@@ -89,8 +91,11 @@ const Home = () => {
       </div>
 
       {/* List of hr  */}
-      <div className='mt-4 px-5 pt-3'>
-        <h3>List of Admins</h3>
+      {isLoading ? (
+        <div className='spinner-container'>
+          <div className='loading-indicator'></div>
+        </div>
+      ) : (
         <table className='table table-striped table-hover'>
           <thead>
             <tr>
@@ -111,29 +116,29 @@ const Home = () => {
             ))}
           </tbody>
         </table>
-        <div className='pagination-wrapper'>
-          <div className='pagination-buttons'>
-            <button
-              onClick={handlePrev}
-              className='btn btn-primary me-2'
-              disabled={pageNumber === 1}
-            >
-              Previous
-            </button>
-            <button
-              onClick={handleNext}
-              className='btn btn-primary'
-              disabled={totalDocs / pageSize <= pageNumber}
-            >
-              Next
-            </button>
-          </div>
+      )}
+      <div className='pagination-wrapper'>
+        <div className='pagination-buttons'>
+          <button
+            onClick={handlePrev}
+            className='btn btn-primary me-2'
+            disabled={pageNumber === 1}
+          >
+            Previous
+          </button>
+          <button
+            onClick={handleNext}
+            className='btn btn-primary'
+            disabled={totalDocs / pageSize <= pageNumber}
+          >
+            Next
+          </button>
+        </div>
 
-          <div className='page-info'>
-            <h5>
-              Page: {pageNumber} / {Math.ceil(totalDocs / pageSize)}
-            </h5>
-          </div>
+        <div className='page-info'>
+          <h5>
+            Page: {pageNumber} / {Math.ceil(totalDocs / pageSize)}
+          </h5>
         </div>
       </div>
     </div>

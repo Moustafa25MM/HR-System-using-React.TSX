@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import './attendance.css';
 interface AttendanceInterface {
   _id: string;
   date: string;
@@ -25,12 +25,15 @@ function Attendance() {
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [totalDocs, setTotalDocs] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   let token = localStorage.getItem('token');
 
   const { id: employeeId } = useParams<{ id: string }>();
 
   const loadAttendances = () => {
+    setIsLoading(true);
     axios
       .get(
         `${process.env.REACT_APP_BASE_API_URL}attendance/employee/${employeeId}?pageNumber=${pageNumber}&pageSize=${pageSize}`,
@@ -43,8 +46,12 @@ function Attendance() {
       .then((res) => {
         setData(res.data.attendance);
         setTotalDocs(res.data.pagination.totalDocs);
+        setIsLoading(false);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -65,6 +72,7 @@ function Attendance() {
 
   async function handleDelete(id: string) {
     try {
+      setIsDeleting(true);
       await axios.delete(
         `${process.env.REACT_APP_BASE_API_URL}attendance/delete/${id}`,
         {
@@ -74,6 +82,7 @@ function Attendance() {
         }
       );
       setData(data.filter((item) => item._id !== id));
+      setIsDeleting(false);
       toast.success('Attendance deleted successfully!');
     } catch (err) {
       console.log(err);
@@ -104,70 +113,77 @@ function Attendance() {
       >
         Add Attendance
       </Link>
-      <div className='mt-3'>
-        <table className='table'>
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data &&
-              data.map((attendance, index) => {
-                const date = new Date(attendance.date);
-                const formattedDate = `${date.getDate()}-${
-                  date.getMonth() + 1
-                }-${date.getFullYear()}`;
-                return (
-                  <tr key={index}>
-                    <td>{formattedDate}</td>
-                    <td>{attendance.status}</td>
-                    <td>
-                      <Link
-                        to={`/attendance/update/${attendance._id}`}
-                        className='btn btn-primary btn-sm me-2'
-                      >
-                        Edit
-                      </Link>
-                      <button
-                        onClick={() => handleDelete(attendance._id)}
-                        className='btn btn-danger btn-sm'
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-          </tbody>
-        </table>
-        <div className='pagination-wrapper'>
-          <div className='pagination-buttons'>
-            <button
-              onClick={handlePrev}
-              className='btn btn-primary me-2'
-              disabled={pageNumber === 1}
-            >
-              Previous
-            </button>
-            <button
-              onClick={handleNext}
-              className='btn btn-primary'
-              disabled={totalDocs / pageSize <= pageNumber}
-            >
-              Next
-            </button>
-          </div>
+      {isLoading ? (
+        <div className='spinner-container'>
+          <div className='loading-indicator'></div>
+        </div>
+      ) : (
+        <div className='mt-3'>
+          <table className='table'>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data &&
+                data.map((attendance, index) => {
+                  const date = new Date(attendance.date);
+                  const formattedDate = `${date.getDate()}-${
+                    date.getMonth() + 1
+                  }-${date.getFullYear()}`;
+                  return (
+                    <tr key={index}>
+                      <td>{formattedDate}</td>
+                      <td>{attendance.status}</td>
+                      <td>
+                        <Link
+                          to={`/attendance/update/${attendance._id}`}
+                          className='btn btn-primary btn-sm me-2'
+                        >
+                          Edit
+                        </Link>
+                        <button
+                          className='remove-button'
+                          onClick={() => handleDelete(attendance._id)}
+                          disabled={isDeleting}
+                        >
+                          {isDeleting ? 'deleting...' : 'delete'}
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+            </tbody>
+          </table>
+          <div className='pagination-wrapper'>
+            <div className='pagination-buttons'>
+              <button
+                onClick={handlePrev}
+                className='btn btn-primary me-2'
+                disabled={pageNumber === 1}
+              >
+                Previous
+              </button>
+              <button
+                onClick={handleNext}
+                className='btn btn-primary'
+                disabled={totalDocs / pageSize <= pageNumber}
+              >
+                Next
+              </button>
+            </div>
 
-          <div className='page-info'>
-            <h5>
-              Page: {pageNumber} / {Math.ceil(totalDocs / pageSize)}
-            </h5>
+            <div className='page-info'>
+              <h5>
+                Page: {pageNumber} / {Math.ceil(totalDocs / pageSize)}
+              </h5>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
