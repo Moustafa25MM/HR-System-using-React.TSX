@@ -53,10 +53,10 @@ function Employee() {
                   <td>{employee.email}</td>
                   <td>
                     <Link
-                      to={`/add/attendance/` + employee._id}
+                      to={`/attendance/employee/` + employee._id}
                       className='btn btn-primary btn-sm me-2'
                     >
-                      Add
+                      Attendance
                     </Link>
                   </td>
                   <td>

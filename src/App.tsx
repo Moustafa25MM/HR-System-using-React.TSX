@@ -11,6 +11,7 @@ import Employee from './components/Employee/Profile/Employee';
 import AddEmployee from './components/Employee/AddEmployee/AddEmployee';
 import EditEmployee from './components/Employee/EditEmployee/EditEmployee';
 import AddAttendance from './components/Attendance/AddAttendance/AddAttendance';
+import Attendance from './components/Attendance/Attendance/Attendance';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
             <Route path='employee' element={<Employee />} />
             <Route path='create' element={<AddEmployee />} />
             <Route path='edit/:id' element={<EditEmployee />} />
+            <Route path='attendance/employee/:id' element={<Attendance />} />
             <Route path='add/attendance/:id' element={<AddAttendance />} />
           </Route>
           <Route path='/login' element={<Login />} />
