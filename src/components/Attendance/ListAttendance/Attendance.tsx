@@ -21,15 +21,18 @@ interface NormalEmployee {
 function Attendance() {
   const [data, setData] = useState<AttendanceInterface[]>([]);
   const [employeeData, setEmployeeData] = useState<NormalEmployee | null>(null);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
+  const [totalDocs, setTotalDocs] = useState(0);
 
   let token = localStorage.getItem('token');
 
   const { id: employeeId } = useParams<{ id: string }>();
 
-  useEffect(() => {
+  const loadAttendances = () => {
     axios
       .get(
-        `${process.env.REACT_APP_BASE_API_URL}attendance/employee/${employeeId}`,
+        `${process.env.REACT_APP_BASE_API_URL}attendance/employee/${employeeId}?pageNumber=${pageNumber}&pageSize=${pageSize}`,
         {
           headers: {
             Authorization: `${token}`,
@@ -37,10 +40,15 @@ function Attendance() {
         }
       )
       .then((res) => {
-        setData(res.data);
+        setData(res.data.attendance);
+        setTotalDocs(res.data.pagination.totalDocs);
       })
       .catch((err) => console.log(err));
-  }, []);
+  };
+
+  useEffect(() => {
+    loadAttendances();
+  }, [pageNumber]);
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_BASE_API_URL}employees/emp/${employeeId}`, {
@@ -70,6 +78,15 @@ function Attendance() {
       console.log(err);
     }
   }
+  const handleNext = () => {
+    setPageNumber(pageNumber + 1);
+  };
+
+  const handlePrev = () => {
+    if (pageNumber > 1) {
+      setPageNumber(pageNumber - 1);
+    }
+  };
 
   return (
     <div className='px-5 py-3'>
@@ -125,6 +142,30 @@ function Attendance() {
               })}
           </tbody>
         </table>
+        <div className='pagination-wrapper'>
+          <div className='pagination-buttons'>
+            <button
+              onClick={handlePrev}
+              className='btn btn-primary me-2'
+              disabled={pageNumber === 1}
+            >
+              Previous
+            </button>
+            <button
+              onClick={handleNext}
+              className='btn btn-primary'
+              disabled={totalDocs / pageSize <= pageNumber}
+            >
+              Next
+            </button>
+          </div>
+
+          <div className='page-info'>
+            <h5>
+              Page: {pageNumber} / {Math.ceil(totalDocs / pageSize)}
+            </h5>
+          </div>
+        </div>
       </div>
     </div>
   );
