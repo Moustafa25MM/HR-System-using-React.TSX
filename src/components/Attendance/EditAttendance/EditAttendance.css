@@ -1,0 +1,51 @@
+.attendance-status-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 50px;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+}
+
+.attendance-status-form {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+.attendance-status-select {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.attendance-status-select option[value='late'] {
+  background: #f6c26e;
+}
+
+.attendance-status-select option[value='present'] {
+  background: #8be37f;
+}
+
+.attendance-status-select option[value='absent'] {
+  background: #e89292;
+}
+
+.attendance-status-button {
+  padding: 10px;
+  font-size: 16px;
+  background-color: #337ab7;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.attendance-status-button:hover {
+  background-color: #286090;
+}

@@ -89,7 +89,7 @@ function Attendance() {
                     <td>{attendance.status}</td>
                     <td>
                       <Link
-                        to={`/attendance/employee/`}
+                        to={`/attendance/update/${attendance._id}`}
                         className='btn btn-primary btn-sm me-2'
                       >
                         Edit
