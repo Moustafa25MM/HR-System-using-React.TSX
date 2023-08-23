@@ -1,21 +1,21 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import axios, { AxiosError } from 'axios';
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-function AddEmployee() {
-  const [errors, setErrors] = useState({ name: '', password: '', email: '' });
+function EditEmployee() {
+  const [errors, setErrors] = useState({ name: '', email: '' });
 
+  let token = localStorage.getItem('token');
   const [data, setData] = useState({
     name: '',
     email: '',
-    password: '',
-    group: 'Normal Employee',
   });
   const navigate = useNavigate();
-  let token = localStorage.getItem('token');
 
+  const { id } = useParams();
   const handleBlurName = () => {
     if (data.name.length < 5) {
       setErrors({
@@ -26,17 +26,6 @@ function AddEmployee() {
       setErrors({ ...errors, name: '' });
     }
   };
-
-  const handleBlurPassword = () => {
-    if (data.password.length < 5) {
-      setErrors({
-        ...errors,
-        password: 'Password should be at least 5 characters long',
-      });
-    } else {
-      setErrors({ ...errors, password: '' });
-    }
-  };
   const handleBlurEmail = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(data.email)) {
@@ -45,27 +34,46 @@ function AddEmployee() {
       setErrors({ ...errors, email: '' });
     }
   };
-
-  const handleSubmit = (event: { preventDefault: () => void }) => {
-    event.preventDefault();
-    const formdata = new FormData();
-    formdata.append('name', data.name);
-    formdata.append('email', data.email);
-    formdata.append('password', data.password);
-    formdata.append('group', data.group);
-
+  const validateForm = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return data.name.length >= 5 && emailRegex.test(data.email);
+  };
+  useEffect(() => {
     axios
-      .post(`${process.env.REACT_APP_BASE_API_URL}employees/create`, formdata, {
+      .get(`${process.env.REACT_APP_BASE_API_URL}employees/emp/${id}`, {
         headers: {
           Authorization: `${token}`,
-          'Content-Type': 'application/json',
         },
       })
       .then((res) => {
-        toast.success('Employee Successfully Added', {
-          position: toast.POSITION.TOP_RIGHT,
+        setData({
+          ...data,
+          name: res.data.Result[0].name,
+          email: res.data.Result[0].email,
         });
-        navigate('/employee');
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+  const handleSubmit = (event: { preventDefault: () => void }) => {
+    event.preventDefault();
+    axios
+      .patch(
+        `${process.env.REACT_APP_BASE_API_URL}employees/profile/${id}`,
+        data,
+        {
+          headers: {
+            Authorization: `${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        if (res.status === 200) {
+          toast.success('Employee Successfully Updated', {
+            position: toast.POSITION.TOP_RIGHT,
+          });
+          navigate('/employee');
+        }
       })
       .catch((error) => {
         const axiosError = error as AxiosError;
@@ -90,19 +98,9 @@ function AddEmployee() {
         console.log(axiosError);
       });
   };
-
-  const validateForm = () => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return (
-      data.name.length >= 5 &&
-      data.password.length >= 5 &&
-      emailRegex.test(data.email)
-    );
-  };
-
   return (
     <div className='d-flex flex-column align-items-center pt-4'>
-      <h2>Add Employee</h2>
+      <h2>Update Employee</h2>
       <form className='row g-3 w-50' onSubmit={handleSubmit}>
         <div className='col-12'>
           <label htmlFor='inputName' className='form-label'>
@@ -116,13 +114,13 @@ function AddEmployee() {
             autoComplete='off'
             onBlur={handleBlurName}
             onChange={(e) => setData({ ...data, name: e.target.value })}
+            value={data.name}
           />
           {data.name.length > 0 && data.name.length < 5 && (
             <small id='nameHelp' className='form-text text-danger'></small>
           )}
           {errors.name && <div className='text-danger'>{errors.name}</div>}
         </div>
-
         <div className='col-12'>
           <label htmlFor='inputEmail4' className='form-label'>
             Email
@@ -135,6 +133,7 @@ function AddEmployee() {
             autoComplete='off'
             onBlur={handleBlurEmail}
             onChange={(e) => setData({ ...data, email: e.target.value })}
+            value={data.email}
           />
           {data.email.length > 0 && data.email.length < 5 && (
             <small id='nameHelp' className='form-text text-danger'></small>
@@ -142,45 +141,12 @@ function AddEmployee() {
           {errors.email && <div className='text-danger'>{errors.email}</div>}
         </div>
         <div className='col-12'>
-          <label htmlFor='inputGroup' className='form-label'>
-            Group
-          </label>
-          <input
-            type='text'
-            className='form-control'
-            id='inputGroup'
-            placeholder='Enter Group'
-            value={data.group}
-            readOnly
-          />
-        </div>
-        <div className='col-12'>
-          <label htmlFor='inputPassword4' className='form-label'>
-            Password
-          </label>
-          <input
-            type='password'
-            className='form-control'
-            id='inputPassword4'
-            placeholder='Enter Password'
-            onBlur={handleBlurPassword}
-            onChange={(e) => setData({ ...data, password: e.target.value })}
-          />
-          {data.password.length > 0 && data.password.length < 5 && (
-            <small id='nameHelp' className='form-text text-danger'></small>
-          )}
-          {errors.password && (
-            <div className='text-danger'>{errors.password}</div>
-          )}
-        </div>
-
-        <div className='col-12'>
           <button
             type='submit'
             className='btn btn-primary'
             disabled={!validateForm()}
           >
-            Create
+            Update
           </button>
         </div>
       </form>
@@ -188,4 +154,4 @@ function AddEmployee() {
   );
 }
 
-export default AddEmployee;
+export default EditEmployee;

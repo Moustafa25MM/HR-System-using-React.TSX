@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 interface NormalEmployee {
-  id: string;
+  _id: string;
   email: string;
   group: string;
   name: string;
@@ -52,7 +52,7 @@ function Employee() {
                   <td>{employee.email}</td>
                   <td>
                     <Link
-                      to={`/employeeEdit/` + employee.id}
+                      to={`/edit/` + employee._id}
                       className='btn btn-primary btn-sm me-2'
                     >
                       edit
