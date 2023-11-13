@@ -7,17 +7,34 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './AddAttendance.css';
 import { useNavigate } from 'react-router-dom';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { renderTimeViewClock } from '@mui/x-date-pickers/timeViewRenderers';
+import dayjs from 'dayjs';
 
 function AddAttendance() {
   const [initialDate, setInitialDate] = useState(new Date());
   const [status, setStatus] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const { id: employeeId } = useParams<{ id: string }>();
+  const [time, setTime] = useState('');
 
   let token = localStorage.getItem('token');
 
   const navigate = useNavigate();
-
+  const [value, setValue] = useState(new Date('2014-08-18T21:11:54'));
+  const handleChange = (newValue: any) => {
+    setValue(newValue);
+  };
+  const handleTimeChange = (date: Date | any | null) => {
+    if (date) {
+      const formattedTime = dayjs(date).format('h:mm:A');
+      setTime(formattedTime);
+      console.log(formattedTime);
+    }
+  };
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     const day = initialDate.getDate();
@@ -30,6 +47,7 @@ function AddAttendance() {
         employeeId: employeeId,
         date: fullDate,
         status: status,
+        signInTime: time,
       };
 
       try {
@@ -67,6 +85,22 @@ function AddAttendance() {
           maxDate={new Date()}
           minDate={new Date(2023, 0, 1)}
         />
+        <div style={{ padding: '20px' }}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DemoContainer components={['TimePicker']}>
+              <TimePicker
+                label='With Time Clock'
+                value={time}
+                onChange={handleTimeChange}
+                viewRenderers={{
+                  hours: renderTimeViewClock,
+                  minutes: renderTimeViewClock,
+                  seconds: renderTimeViewClock,
+                }}
+              />
+            </DemoContainer>
+          </LocalizationProvider>
+        </div>
         <form onSubmit={handleSubmit} className='attendance-form'>
           <select
             value={status}

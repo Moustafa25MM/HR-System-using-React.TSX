@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 50px;
+  padding: 60px;
 }
 
 .attendance-content {
@@ -12,6 +12,7 @@
   justify-content: space-between;
   width: 100%;
   max-width: 600px;
+  margin: 20px;
 }
 
 .attendance-calendar {
