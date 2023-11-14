@@ -3,6 +3,8 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import EmployeeDocument from '../../Document/EmployeeDocument';
 
 interface NormalEmployee {
   _id: string;
@@ -60,6 +62,14 @@ function Employee() {
 
   return (
     <div className='px-5 py-3'>
+      <PDFDownloadLink
+        document={<EmployeeDocument employees={data} />}
+        fileName='employees.pdf'
+      >
+        {({ blob, url, loading, error }) =>
+          loading ? 'Loading document...' : 'Download PDF'
+        }
+      </PDFDownloadLink>
       <div className='d-flex justify-content-center mt-2'>
         <h3>Employee List</h3>
       </div>
