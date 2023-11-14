@@ -9,6 +9,9 @@ interface NormalEmployee {
   email: string;
   group: string;
   name: string;
+  netSalary: number;
+  grossSalary: number;
+  task: string;
 }
 
 function Employee() {
@@ -75,8 +78,11 @@ function Employee() {
               <tr>
                 <th>Name</th>
                 <th>Email</th>
+                <th>Net Salary</th>
+                <th>Gross Salary</th>
                 <th>Attendance</th>
                 <th>Action</th>
+                <th>Task</th>
               </tr>
             </thead>
             <tbody>
@@ -85,6 +91,8 @@ function Employee() {
                   <tr key={index}>
                     <td>{employee.name}</td>
                     <td>{employee.email}</td>
+                    <td>{employee.netSalary}</td>
+                    <td>{employee.grossSalary}</td>
                     <td>
                       <Link
                         to={`/attendance/employee/` + employee._id}
@@ -101,6 +109,7 @@ function Employee() {
                         edit
                       </Link>
                     </td>
+                    <td>{employee.task}</td>
                   </tr>
                 );
               })}

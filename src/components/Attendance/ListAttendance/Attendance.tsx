@@ -11,6 +11,7 @@ interface AttendanceInterface {
   _id: string;
   date: string;
   status: string;
+  signInTime: string;
 }
 interface NormalEmployee {
   _id: string;
@@ -124,6 +125,7 @@ function Attendance() {
               <tr>
                 <th>Date</th>
                 <th>Status</th>
+                <th>Sign-In</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -138,6 +140,7 @@ function Attendance() {
                     <tr key={index}>
                       <td>{formattedDate}</td>
                       <td>{attendance.status}</td>
+                      <td>{attendance.signInTime}</td>
                       <td>
                         <Link
                           to={`/attendance/update/${attendance._id}`}

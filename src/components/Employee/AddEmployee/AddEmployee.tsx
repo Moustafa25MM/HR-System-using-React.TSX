@@ -12,6 +12,9 @@ function AddEmployee() {
     email: '',
     password: '',
     group: 'Normal Employee',
+    netSalary: '',
+    grossSalary: '',
+    task: '',
   });
   const navigate = useNavigate();
   let token = localStorage.getItem('token');
@@ -53,6 +56,9 @@ function AddEmployee() {
     formdata.append('email', data.email);
     formdata.append('password', data.password);
     formdata.append('group', data.group);
+    formdata.append('netSalary', data.netSalary);
+    formdata.append('grossSalary', data.grossSalary);
+    formdata.append('task', data.task);
 
     axios
       .post(`${process.env.REACT_APP_BASE_API_URL}employees/create`, formdata, {
@@ -173,7 +179,48 @@ function AddEmployee() {
             <div className='text-danger'>{errors.password}</div>
           )}
         </div>
-
+        <div className='col-12'>
+          <label htmlFor='inputNetSalary' className='form-label'>
+            Net Salary
+          </label>
+          <input
+            type='number'
+            className='form-control'
+            id='inputNetSalary'
+            placeholder='Enter Net Salary'
+            autoComplete='off'
+            onChange={(e) => setData({ ...data, netSalary: e.target.value })}
+          />
+        </div>
+        <div className='col-12'>
+          <label htmlFor='inputGrossSalary' className='form-label'>
+            Gross Salary
+          </label>
+          <input
+            type='number'
+            className='form-control'
+            id='inputGrossSalary'
+            placeholder='Enter Gross Salary'
+            autoComplete='off'
+            onChange={(e) => setData({ ...data, grossSalary: e.target.value })}
+          />
+        </div>
+        <div className='col-12'>
+          <label htmlFor='inputTask' className='form-label'>
+            Task
+          </label>
+          <select
+            className='form-control'
+            id='inputTask'
+            onChange={(e) => setData({ ...data, task: e.target.value })}
+          >
+            <option value=''>Select Task</option>
+            <option value='Frontend'>Frontend</option>
+            <option value='Backend'>Backend</option>
+            <option value='Devops'>Devops</option>
+            <option value='Software'>Software</option>
+          </select>
+        </div>
         <div className='col-12'>
           <button
             type='submit'
