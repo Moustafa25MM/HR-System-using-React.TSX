@@ -7,6 +7,9 @@ import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './attendance.css';
+import AttendanceDocument from '../../Document/AttendanceDocument';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+
 interface AttendanceInterface {
   _id: string;
   date: string;
@@ -108,12 +111,32 @@ function Attendance() {
         <h3 className='m-0'>{employeeData?.email}</h3>
         <h3 className='m-0 mt-2'>{employeeData?.name}</h3>
       </div>
+
       <Link
         to={`/add/attendance/` + employeeData?._id}
-        className='btn btn-success'
+        className='btn btn-success me-2'
       >
         Add Attendance
       </Link>
+      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        {employeeData && data && (
+          <PDFDownloadLink
+            document={
+              <AttendanceDocument
+                attendances={data}
+                email={employeeData.email}
+                name={employeeData.name}
+              />
+            }
+            fileName='attendance.pdf'
+          >
+            {({ blob, url, loading, error }) =>
+              loading ? 'Loading document...' : 'Download attendance'
+            }
+          </PDFDownloadLink>
+        )}
+      </div>
+
       {isLoading ? (
         <div className='spinner-container'>
           <div className='loading-indicator'></div>
